@@ -22,9 +22,9 @@ impl Editor {
         let (_, rows) = Terminal::size()?;
 
         for curr_row in 0..rows {
-            print!("~");
+            Terminal::print("~")?;
             if curr_row + 1 < rows {
-                print!("\r\n");
+                Terminal::print("\r\n")?;
             }
         }
         Ok(())
@@ -57,13 +57,15 @@ impl Editor {
     }
 
     fn refresh_screen(&self) -> Result<(), std::io::Error> {
+        Terminal::hide_cursor()?;
         if self.should_quit {
             Terminal::clear_screen()?;
-            print!("Goodbye.\r\n");
+            Terminal::print("Goodbye.\r\n")?;
         } else {
             Self::draw_rows()?;
             Terminal::move_cursor_to(0, 0)?;
         }
+        Terminal::show_cursor()?;
         Ok(())
     }
 }

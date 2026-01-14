@@ -1,5 +1,6 @@
-use crossterm::cursor::MoveTo;
+use crossterm::cursor::{Hide, MoveTo, Show};
 use crossterm::execute;
+use crossterm::style::Print;
 use crossterm::terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
 use std::io::stdout;
 
@@ -10,6 +11,21 @@ impl Terminal {
         enable_raw_mode()?;
         Self::clear_screen()?;
         Self::move_cursor_to(0, 0)?;
+        Ok(())
+    }
+
+    pub fn hide_cursor() -> Result<(), std::io::Error> {
+        execute!(stdout(), Hide)?;
+        Ok(())
+    }
+
+    pub fn show_cursor() -> Result<(), std::io::Error> {
+        execute!(stdout(), Show)?;
+        Ok(())
+    }
+
+    pub fn print(string: &str) -> Result<(), std::io::Error> {
+        execute!(stdout(), Print(string))?;
         Ok(())
     }
 
