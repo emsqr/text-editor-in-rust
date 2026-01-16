@@ -23,6 +23,8 @@ impl Editor {
         let (_, rows) = Terminal::size()?;
 
         for curr_row in 0..rows {
+            // Clearing the row before drawing
+            Terminal::clear_line()?;
             Terminal::print("~")?;
             if curr_row + 1 < rows {
                 Terminal::print("\r\n")?;
@@ -67,6 +69,7 @@ impl Editor {
             Terminal::move_cursor_to(0, 0)?;
         }
         Terminal::show_cursor()?;
+        Terminal::execute()?;
         Ok(())
     }
 }
