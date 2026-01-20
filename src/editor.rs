@@ -1,7 +1,10 @@
 use crossterm::event::{Event, Event::Key, KeyCode::Char, KeyEvent, KeyModifiers, read};
 mod terminal;
-use terminal::Terminal;
 use std::io::Error;
+use terminal::Terminal;
+
+const NAME: &str = env!("CARGO_PKG_NAME");
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct Editor {
     should_quit: bool,
@@ -66,10 +69,21 @@ impl Editor {
             Terminal::print("Goodbye.\r\n")?;
         } else {
             Self::draw_rows()?;
+            Self::draw_welcome_message()?;
             Terminal::move_cursor_to(0, 0)?;
         }
         Terminal::show_cursor()?;
         Terminal::execute()?;
+        Ok(())
+    }
+
+    fn draw_welcome_message() -> Result<(), Error> {
+        let (cols, rows) = Terminal::size()?;
+        let mut msg = format!("{NAME} -- {VERSION}");
+        let msg_len = msg.len() as u16;
+        msg.truncate(rows as usize);
+        Terminal::move_cursor_to(cols / 2 - msg_len / 2, rows / 2)?;
+        Terminal::print(msg)?;
         Ok(())
     }
 }

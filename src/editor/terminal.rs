@@ -2,6 +2,7 @@ use crossterm::cursor::{Hide, MoveTo, Show};
 use crossterm::queue;
 use crossterm::style::Print;
 use crossterm::terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
+use std::fmt::Display;
 use std::io::{Error, Write, stdout};
 
 pub struct Terminal {}
@@ -24,7 +25,7 @@ impl Terminal {
         Ok(())
     }
 
-    pub fn print(string: &str) -> Result<(), Error> {
+    pub fn print<T: Display>(string: T) -> Result<(), Error> {
         queue!(stdout(), Print(string))?;
         Ok(())
     }
