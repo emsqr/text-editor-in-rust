@@ -82,7 +82,10 @@ impl Editor {
         let mut msg = format!("{NAME} -- {VERSION}");
         let msg_len = msg.len() as u16;
         msg.truncate(rows as usize);
-        Terminal::move_cursor_to(cols / 2 - msg_len / 2, rows / 2)?;
+        // can't directly substract like this (cols - msg_len)
+        // if msg_len is greater than cols, then it will throw error 
+        // - attempt to substract with overflow
+        Terminal::move_cursor_to((cols.saturating_sub(msg_len)) / 2, rows / 2)?;
         Terminal::print(msg)?;
         Ok(())
     }
